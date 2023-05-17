@@ -1,26 +1,28 @@
-from centos:centos7
+from centos:latest
 
 MAINTAINER Anoop A K <anoop@codecg.com> 
 
-RUN useradd -d /var/lib/render -c 'Afanasy Render User' render 
+RUN useradd -d /var/lib/render -g render -c 'Afanasy Render User' render 
+
+RUN yum makecache
 
 # Install postgresql-libs
 RUN yum install postgresql-libs wget tar -y
 
 # Copy afanasy RPMs to /tmp
 WORKDIR /tmp
-RUN wget https://sourceforge.net/projects/cgru/files/2.3.0/cgru.2.3.0.CentOS-7.5.1804_x86_64.tar.gz
+RUN wget --no-check-certificate https://sourceforge.net/projects/cgru/files/2.3.1/cgru.2.3.1.CentOS-7_x86_64.tar.gz
 
 # Extract the archive to /tmp
-RUN tar xfv cgru.2.3.0.CentOS-7.5.1804_x86_64.tar.gz -C /tmp/
+RUN tar xfv cgru.2.3.1.CentOS-7_x86_64.tar.gz -C /tmp/
 
 # Install Dependencies
 RUN yum install postgresql-libs -y
 
 # Install afanasy-render
-RUN yum install cgru-common-2.3.0-0.x86_64.rpm -y
-RUN yum install afanasy-common-2.3.0-0.x86_64.rpm -y
-RUN yum install afanasy-render-2.3.0-0.x86_64.rpm -y
+RUN yum install cgru-common-2.3.1-0.x86_64.rpm -y
+RUN yum install afanasy-common-2.3.1-0.x86_64.rpm -y
+RUN yum install afanasy-render-2.3.1-0.x86_64.rpm -y
 
 # Set CGRU environment variables
 ENV PATH /opt/cgru/afanasy/bin:$PATH
